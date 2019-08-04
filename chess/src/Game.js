@@ -107,7 +107,9 @@ export function movePiece(from, to){
 
 export function movePiece(pieceName, toX, toY){
   const piece = pieces[pieceName];
-  const {x, y} = piece;  
+  const {x, y} = piece;
+  if(x == toX && y == toY)
+    return;
   board[toX][toY] = pieceName;
   board[x][y] = "";
   piece.x = toX;
