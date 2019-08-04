@@ -10,7 +10,7 @@ export default createGlobalStyle`
 
   html, body, #root{
     height: 100%;
-    background-color: #fffafa;
+    background-color: aliceblue;/*#fffafa;*/
   }
 
   #root{

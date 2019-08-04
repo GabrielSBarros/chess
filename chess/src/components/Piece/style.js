@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div` 
-  font-size: 80px;
+  font-size: 75px;
   text-align: center;
-color: ${props => props.black ? "black": "white"};
+  cursor: move;
+  background-color: inherit;
+  color: ${props => props.black ? "black": "white"};
+  opacity: ${props => props.isDragging ? 0.5 : 1};
 ` 
