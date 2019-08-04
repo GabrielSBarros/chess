@@ -1,25 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Board from './components/Board';
-import GlobalStyle from './styles/global';
+import React from "react";
+import ReactDOM from "react-dom";
 
+import App from "./App";
+import { observe } from "./Game";
 
-import { DndProvider } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+// ReactDOM.render(<App />, document.getElementById('root'));
 
-import { observe } from './Game';
-
-
-//ReactDOM.render(<App />, document.getElementById('root'));
-
-observe((piecesPosition, pieces) => 
-  ReactDOM.render((
-    <DndProvider backend={HTML5Backend}>
-      <Board piecesPosition={piecesPosition} pieces={pieces}/>
-      <GlobalStyle/>
-    </DndProvider>
-    ),
-    document.getElementById('root'),
-  )
-); 
-
+observe((piecesPosition, pieces) => {
+  ReactDOM.render(
+    <App piecesPosition={piecesPosition} pieces={pieces} />,
+    document.getElementById("root")
+  );
+});
