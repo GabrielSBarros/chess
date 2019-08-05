@@ -1,49 +1,29 @@
-import React from "react";
+import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
-import { Container } from "./style";
-import {
-  rook,
-  knight,
-  bishop,
-  king,
-  queen,
-  pawn,
-} from "../../ChessPiecesUnicode";
 
-export default function Piece({ piece, black }) {
+import ChessPiecesUnicode from "../../util/ChessPiecesUnicode";
+import { Container } from "./style";
+
+export default function Piece({ piece, black: blackSquare }) {
+  const { id, type, black } = piece;
+
   const [{ isDragging }, drag] = useDrag({
     item: {
       type: "piece",
-      id: piece.id,
-      black: piece.black,
+      id,
+      black,
     },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  function setPiece() {
-    switch (piece.type) {
-      case "pawn":
-        return pawn;
-      case "rook":
-        return rook;
-      case "knight":
-        return knight;
-      case "bishop":
-        return bishop;
-      case "queen":
-        return queen;
-      case "king":
-        return king;
-      default:
-        return "";
-    }
-  }
+  const setPiece = useMemo(() => ChessPiecesUnicode[type], [type]);
+
   return (
-    <Container black={black} ref={drag} isDragging={isDragging}>
-      {setPiece()}
+    <Container black={blackSquare} ref={drag} isDragging={isDragging}>
+      {setPiece}
     </Container>
   );
 }

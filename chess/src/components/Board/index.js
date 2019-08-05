@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Square from "../Square";
-import { getBoard } from "../../Game";
+import { getBoard } from "../../services/Game";
 
 import { Container } from "./style";
 
@@ -11,13 +11,16 @@ export default function Board({ pieces, piecesPosition }) {
   const squares = [];
 
   function renderSquare(x, y) {
-    const black = (x + y) % 2 === 1;
     let piece = null;
+
+    const black = (x + y) % 2 === 1;
     const isTherePiece = piecesPosition[x][y];
+
     if (isTherePiece) {
       console.log(`isTherePiece ${isTherePiece}`);
       piece = pieces[isTherePiece];
     }
+
     return <Square x={x} y={y} black={black} piece={piece} />;
   }
 

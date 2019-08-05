@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import App from "./App";
-import { observe } from "./Game";
+import { observe } from "./services/Game";
 
 // ReactDOM.render(<App />, document.getElementById('root'));
 
