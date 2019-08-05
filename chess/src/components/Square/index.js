@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import { useDrop } from "react-dnd";
 
 import Piece from "../Piece";
-import { movePiece } from "../../Game";
+import { movePiece, canMovePiece } from "../../Game";
 
 import { Container } from "./style";
 
 export default function Square({ black, piece, x, y }) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: "piece",
-    canDrop: () => true,
+    canDrop: item => canMovePiece(item.id, x, y, piece && piece.black),
     drop: item => {
       movePiece(item.id, x, y);
     },

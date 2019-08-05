@@ -9,23 +9,23 @@ for (let i = 0; i < 8; i++) {
 }
 
 const pieces = {
-  wRook1: { x: 7, y: 0, type: "rook", id: "wRook1" },
-  wKnight1: { x: 7, y: 1, type: "knight", id: "wKnight1" },
-  wBishop1: { x: 7, y: 2, type: "bishop", id: "wBishop1" },
-  wQueen: { x: 7, y: 3, type: "queen", id: "wQueen" },
-  wKing: { x: 7, y: 4, type: "king", id: "wKing" },
-  wBishop2: { x: 7, y: 5, type: "bishop", id: "wBishop2" },
-  wKnight2: { x: 7, y: 6, type: "knight", id: "wKnight2" },
-  wRook2: { x: 7, y: 7, type: "rook", id: "wRook2" },
+  wRook1: { x: 7, y: 0, type: "rook", black: false, id: "wRook1" },
+  wKnight1: { x: 7, y: 1, type: "knight", black: false, id: "wKnight1" },
+  wBishop1: { x: 7, y: 2, type: "bishop", black: false, id: "wBishop1" },
+  wQueen: { x: 7, y: 3, type: "queen", black: false, id: "wQueen" },
+  wKing: { x: 7, y: 4, type: "king", black: false, id: "wKing" },
+  wBishop2: { x: 7, y: 5, type: "bishop", black: false, id: "wBishop2" },
+  wKnight2: { x: 7, y: 6, type: "knight", black: false, id: "wKnight2" },
+  wRook2: { x: 7, y: 7, type: "rook", black: false, id: "wRook2" },
 
-  wPawn1: { x: 6, y: 0, type: "pawn", id: "wPawn1" },
-  wPawn2: { x: 6, y: 1, type: "pawn", id: "wPawn2" },
-  wPawn3: { x: 6, y: 2, type: "pawn", id: "wPawn3" },
-  wPawn4: { x: 6, y: 3, type: "pawn", id: "wPawn4" },
-  wPawn5: { x: 6, y: 4, type: "pawn", id: "wPawn5" },
-  wPawn6: { x: 6, y: 5, type: "pawn", id: "wPawn6" },
-  wPawn7: { x: 6, y: 6, type: "pawn", id: "wPawn7" },
-  wPawn8: { x: 6, y: 7, type: "pawn", id: "wPawn8" },
+  wPawn1: { x: 6, y: 0, type: "pawn", black: false, id: "wPawn1" },
+  wPawn2: { x: 6, y: 1, type: "pawn", black: false, id: "wPawn2" },
+  wPawn3: { x: 6, y: 2, type: "pawn", black: false, id: "wPawn3" },
+  wPawn4: { x: 6, y: 3, type: "pawn", black: false, id: "wPawn4" },
+  wPawn5: { x: 6, y: 4, type: "pawn", black: false, id: "wPawn5" },
+  wPawn6: { x: 6, y: 5, type: "pawn", black: false, id: "wPawn6" },
+  wPawn7: { x: 6, y: 6, type: "pawn", black: false, id: "wPawn7" },
+  wPawn8: { x: 6, y: 7, type: "pawn", black: false, id: "wPawn8" },
 
   bRook1: { x: 0, y: 0, type: "rook", black: true, id: "bRook1" },
   bKnight1: { x: 0, y: 1, type: "knight", black: true, id: "bKnight1" },
@@ -112,4 +112,18 @@ export function movePiece(pieceName, toX, toY) {
 
 export function getBoard() {
   return board;
+}
+
+function canMoveKnight(x, y, toX, toY) {
+  const dX = Math.abs(x - toX);
+  const dY = Math.abs(y - toY);
+  return (dX === 2 && dY === 1) || (dX === 1 && dY === 2);
+}
+
+export function canMovePiece(draggedPieceName, toX, toY, pieceBlack) {
+  const { black, x, y, type } = pieces[draggedPieceName];
+  if (pieceBlack === black) return false;
+
+  if (type === "knight") return canMoveKnight(x, y, toX, toY);
+  return false;
 }

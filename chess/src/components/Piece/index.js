@@ -13,7 +13,11 @@ import {
 
 export default function Piece({ piece, black }) {
   const [{ isDragging }, drag] = useDrag({
-    item: { type: "piece", id: piece.id },
+    item: {
+      type: "piece",
+      id: piece.id,
+      black: piece.black,
+    },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
@@ -50,5 +54,7 @@ Piece.propTypes = {
     id: PropTypes.string,
     black: PropTypes.bool,
     type: PropTypes.string,
+    x: PropTypes.number,
+    y: PropTypes.number,
   }).isRequired,
 };
