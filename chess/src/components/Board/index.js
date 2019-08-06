@@ -7,7 +7,6 @@ import { Container } from "./style";
 
 export default function Board({ pieces, piecesPosition }) {
   console.log(getBoard());
-  console.log(pieces);
   const squares = [];
 
   function renderSquare(x, y) {
@@ -17,7 +16,6 @@ export default function Board({ pieces, piecesPosition }) {
     const isTherePiece = piecesPosition[x][y];
 
     if (isTherePiece) {
-      console.log(`isTherePiece ${isTherePiece}`);
       piece = pieces[isTherePiece];
     }
 

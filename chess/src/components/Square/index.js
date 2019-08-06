@@ -8,6 +8,9 @@ import { movePiece, canMovePiece } from "../../services/Game";
 import { Container } from "./style";
 
 export default function Square({ black, piece, x, y }) {
+  Square.defaultProps = {
+    piece: {},
+  };
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: "piece",
     canDrop: item => canMovePiece(item.id, x, y, piece && piece.black),
@@ -32,7 +35,7 @@ Square.propTypes = {
   piece: PropTypes.shape({
     id: PropTypes.string,
     black: PropTypes.bool,
-  }).isRequired,
+  }),
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
 };

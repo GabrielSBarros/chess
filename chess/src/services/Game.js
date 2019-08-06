@@ -1,29 +1,14 @@
+import ChessMovements from "../util/ChessMovements";
+
 const genericMatriz = [[], [], [], [], [], [], [], []];
 
 let observer = null;
 
 const board = genericMatriz.map(() => genericMatriz.map(() => ""));
 
-function canMoveKnight(x, y, toX, toY) {
-  const dX = Math.abs(x - toX);
-  const dY = Math.abs(y - toY);
-
-  return (dX === 2 && dY === 1) || (dX === 1 && dY === 2);
-}
-
-const canMoveFunctions = {
-  rook: () => false,
-  knight: canMoveKnight,
-  bishop: () => false,
-  queen: () => false,
-  king: () => false,
-  wpawn: () => false,
-  bpawn: () => false,
-};
-
 function Piece(x, y, type, black, id) {
   return {
-    canMove: canMoveFunctions[type],
+    canMove: ChessMovements[type],
     black,
     type,
     id,
@@ -129,7 +114,7 @@ export function canMovePiece(draggedPieceName, toX, toY, pieceBlack) {
 
   if (pieceBlack === black) return false;
 
-  return canMove(x, y, toX, toY);
+  return canMove(x, y, toX, toY, board);
 }
 
 export function observe(o) {
