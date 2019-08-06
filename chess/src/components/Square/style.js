@@ -7,6 +7,7 @@ export const Container = styled.div`
     if (props.isOver && props.canDrop) return "green";
     return props.black ? "#666666" : "#9F9F9F";
   }};
+  border: 1px solid lightgrey;
   height: 12.5%;
   width: 12.5%;
   flex: 0 0 12.5%;
