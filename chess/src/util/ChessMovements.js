@@ -29,12 +29,18 @@ function canMoveBlackPawn(x, y, toX, toY, board) {
   );
 }
 
+function canMoveKing(x, y, toX, toY) {
+  const dX = Math.abs(x - toX);
+  const dY = Math.abs(y - toY);
+  return dX <= 1 && dY <= 1 && dX + dY <= 2;
+}
+
 export default {
   rook: () => false,
   knight: canMoveKnight,
   bishop: () => false,
   queen: () => false,
-  king: () => false,
+  king: canMoveKing,
   wpawn: canMoveWhitePawn,
   bpawn: canMoveBlackPawn,
 };
