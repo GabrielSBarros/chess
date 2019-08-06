@@ -7,6 +7,7 @@ import { Container } from "./style";
 
 export default function Board({ pieces, piecesPosition }) {
   console.log(getBoard());
+  console.log(pieces);
   const squares = [];
 
   function renderSquare(x, y) {

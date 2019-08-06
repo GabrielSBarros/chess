@@ -35,8 +35,31 @@ function canMoveKing(x, y, toX, toY) {
   return dX <= 1 && dY <= 1 && dX + dY <= 2;
 }
 
+function canMoveRook(x, y, toX, toY, board) {
+  let topLim;
+  for (topLim = x + 1; topLim < 8; topLim++) if (board[topLim][y] !== "") break;
+
+  let bottomLim;
+  for (bottomLim = x - 1; bottomLim >= 0; bottomLim--)
+    if (board[bottomLim][y] !== "") break;
+
+  let leftLim;
+  for (leftLim = y - 1; leftLim >= 0; leftLim--)
+    if (board[x][leftLim] !== "") break;
+
+  let rightLim;
+  for (rightLim = y + 1; rightLim < 8; rightLim++)
+    if (board[x][rightLim] !== "") break;
+
+  return (
+    ((toX === x && toY !== y) || (toY === y && toX !== x)) &&
+    (toX <= topLim && toX >= bottomLim) &&
+    (toY <= rightLim && toY >= leftLim)
+  );
+}
+
 export default {
-  rook: () => false,
+  rook: canMoveRook,
   knight: canMoveKnight,
   bishop: () => false,
   queen: () => false,
