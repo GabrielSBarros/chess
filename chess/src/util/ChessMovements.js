@@ -8,12 +8,12 @@ function canMoveKnight(x, y, toX, toY) {
 function canMoveWhitePawn(x, y, toX, toY, board) {
   return (
     (x > 0 &&
-      board[x + 1][y] === "" &&
+      board[x - 1][y] === "" &&
       ((x === 6 && toY === y && (board[x - 2][y] === "" && toX === x - 2)) ||
-        (toX === x + 1 && toY === y))) ||
-    (toX === x + 1 &&
-      ((toY === y + 1 && board[x + 1][y + 1] !== "") ||
-        (toY === y - 1 && board[x + 1][y - 1] !== "")))
+        (toX === x - 1 && toY === y))) ||
+    (toX === x - 1 &&
+      ((toY === y + 1 && board[x - 1][y + 1] !== "") ||
+        (toY === y - 1 && board[x - 1][y - 1] !== "")))
   );
 }
 
