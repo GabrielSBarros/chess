@@ -84,11 +84,18 @@ function canMoveBishop(x, y, toX, toY, board) {
   return diagonalMovement(x, y, toX, toY, board);
 }
 
+function canMoveQueen(x, y, toX, toY, board) {
+  return (
+    straightMovement(x, y, toX, toY, board) ||
+    diagonalMovement(x, y, toX, toY, board)
+  );
+}
+
 export default {
   rook: canMoveRook,
   knight: canMoveKnight,
   bishop: canMoveBishop,
-  queen: () => false,
+  queen: canMoveQueen,
   king: canMoveKing,
   wpawn: canMoveWhitePawn,
   bpawn: canMoveBlackPawn,
