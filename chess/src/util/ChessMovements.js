@@ -1,3 +1,44 @@
+import Limits from "./Limits";
+
+function diagonalMovement(x, y, toX, toY, board) {
+  const dX = Math.abs(x - toX);
+  const dY = Math.abs(y - toY);
+  const topLeftLim = Limits.getTopLeftLim(x, y, board);
+  const topRightLim = Limits.getTopRightLim(x, y, board);
+  const bottomLeftLim = Limits.getBottomLeftLim(x, y, board);
+  const bottomRightLim = Limits.getBottomRightLim(x, y, board);
+
+  return (
+    dX === dY &&
+    ((toX < x && toY < y && toX >= x - topLeftLim && toY >= y - topLeftLim) ||
+      (toX < x &&
+        toY > y &&
+        toX >= x - topRightLim &&
+        toY <= y + topRightLim) ||
+      (toX > x &&
+        toY < y &&
+        toX <= x + bottomLeftLim &&
+        toY >= y - bottomLeftLim) ||
+      (toX > x &&
+        toY > y &&
+        toX <= x + bottomRightLim &&
+        toY <= y + bottomRightLim))
+  );
+}
+
+function straightMovement(x, y, toX, toY, board) {
+  const topLim = Limits.getTopLim(x, y, board);
+  const bottomLim = Limits.getBottomLim(x, y, board);
+  const leftLim = Limits.getLeftLim(x, y, board);
+  const rightLim = Limits.getRightLim(x, y, board);
+
+  return (
+    ((toX === x && toY !== y) || (toY === y && toX !== x)) &&
+    (toX >= topLim && toX <= bottomLim) &&
+    (toY <= rightLim && toY >= leftLim)
+  );
+}
+
 function canMoveKnight(x, y, toX, toY) {
   const dX = Math.abs(x - toX);
   const dY = Math.abs(y - toY);
@@ -36,32 +77,17 @@ function canMoveKing(x, y, toX, toY) {
 }
 
 function canMoveRook(x, y, toX, toY, board) {
-  let topLim;
-  for (topLim = x + 1; topLim < 8; topLim++) if (board[topLim][y] !== "") break;
+  return straightMovement(x, y, toX, toY, board);
+}
 
-  let bottomLim;
-  for (bottomLim = x - 1; bottomLim >= 0; bottomLim--)
-    if (board[bottomLim][y] !== "") break;
-
-  let leftLim;
-  for (leftLim = y - 1; leftLim >= 0; leftLim--)
-    if (board[x][leftLim] !== "") break;
-
-  let rightLim;
-  for (rightLim = y + 1; rightLim < 8; rightLim++)
-    if (board[x][rightLim] !== "") break;
-
-  return (
-    ((toX === x && toY !== y) || (toY === y && toX !== x)) &&
-    (toX <= topLim && toX >= bottomLim) &&
-    (toY <= rightLim && toY >= leftLim)
-  );
+function canMoveBishop(x, y, toX, toY, board) {
+  return diagonalMovement(x, y, toX, toY, board);
 }
 
 export default {
   rook: canMoveRook,
   knight: canMoveKnight,
-  bishop: () => false,
+  bishop: canMoveBishop,
   queen: () => false,
   king: canMoveKing,
   wpawn: canMoveWhitePawn,
