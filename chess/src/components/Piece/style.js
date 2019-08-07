@@ -1,10 +1,15 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  font-size: 70px;
+  display: flex;
+  justify-content: space-around;
   text-align: center;
   cursor: move;
+  height: 100%;
   background-color: inherit;
-  color: ${props => (props.black ? "black" : "white")};
   opacity: ${props => (props.isDragging ? 0.5 : 1)};
+  img {
+    height: 85%;
+    align-self: center;
+  }
 `;

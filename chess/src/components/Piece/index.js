@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
 
-import ChessPiecesUnicode from "../../util/ChessPiecesUnicode";
+import ChessPieces from "../../util/ChessPieces";
 import { Container } from "./style";
 
 export default function Piece({ piece, black: blackSquare }) {
@@ -18,12 +18,14 @@ export default function Piece({ piece, black: blackSquare }) {
       isDragging: monitor.isDragging(),
     }),
   });
-
-  const setPiece = useMemo(() => ChessPiecesUnicode[type], [type]);
+  const color = black ? "black" : "white";
+  const setPiece = useMemo(() => {
+    return ChessPieces[color][type];
+  }, [color, type]);
 
   return (
     <Container black={blackSquare} ref={drag} isDragging={isDragging}>
-      {setPiece}
+      <img src={setPiece} alt="" />
     </Container>
   );
 }
