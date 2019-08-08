@@ -3,12 +3,13 @@ import ChessMovements from "../util/ChessMovements";
 const genericMatriz = [[], [], [], [], [], [], [], []];
 
 let observer = null;
+let blackPlaying = false;
 
 const board = genericMatriz.map(() => genericMatriz.map(() => ""));
 
 function Piece(x, y, type, black, id) {
   return {
-    canMove: ChessMovements[type],
+    canMoveTo: ChessMovements[type],
     black,
     type,
     id,
@@ -101,6 +102,7 @@ export function movePiece(pieceName, toX, toY) {
   board[x][y] = "";
   piece.x = toX;
   piece.y = toY;
+  blackPlaying = !blackPlaying;
 
   emitChange();
 }
@@ -109,12 +111,16 @@ export function getBoard() {
   return board;
 }
 
-export function canMovePiece(draggedPieceName, toX, toY, pieceBlack) {
-  const { black, x, y, canMove } = pieces[draggedPieceName];
+export function canMovePieceTo(draggedPieceName, toX, toY, pieceBlack) {
+  const { black, x, y, canMoveTo } = pieces[draggedPieceName];
 
   if (pieceBlack === black) return false;
 
-  return canMove(x, y, toX, toY, board);
+  return canMoveTo(x, y, toX, toY, board);
+}
+
+export function canMove(black) {
+  return black === blackPlaying;
 }
 
 export function observe(o) {

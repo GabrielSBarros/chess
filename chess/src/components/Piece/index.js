@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
 
+import { canMove } from "../../services/Game";
 import ChessPieces from "../../util/ChessPieces";
 import { Container } from "./style";
 
@@ -17,6 +18,7 @@ export default function Piece({ piece, black: blackSquare }) {
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
+    canDrag: () => canMove(black),
   });
   const color = black ? "black" : "white";
   const setPiece = useMemo(() => {
