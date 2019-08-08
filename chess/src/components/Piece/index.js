@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import { useDrag } from "react-dnd";
+import { useDrag, DragPreviewImage } from "react-dnd";
 
 import { canMove } from "../../services/Game";
 import ChessPieces from "../../util/ChessPieces";
@@ -9,7 +9,7 @@ import { Container } from "./style";
 export default function Piece({ piece, black: blackSquare }) {
   const { id, type, black } = piece;
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     item: {
       type: "piece",
       id,
@@ -27,6 +27,7 @@ export default function Piece({ piece, black: blackSquare }) {
 
   return (
     <Container black={blackSquare} ref={drag} isDragging={isDragging}>
+      <DragPreviewImage connect={preview} src={setPiece} />
       <img src={setPiece} alt="" />
     </Container>
   );
