@@ -123,7 +123,7 @@ export function canMove(black) {
   return black === blackPlaying;
 }
 
-export function getBlackPlaying(){
+export function getBlackPlaying() {
   return blackPlaying;
 }
 

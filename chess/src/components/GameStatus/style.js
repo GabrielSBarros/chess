@@ -27,6 +27,7 @@ export const Turn = styled.div`
     padding: 0 40px;
     text-transform: uppercase;
     font-size: 40px;
+    letter-spacing: 3px;
   }
 
   div:first-child {
