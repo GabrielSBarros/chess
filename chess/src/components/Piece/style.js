@@ -6,7 +6,6 @@ export const Container = styled.div`
   text-align: center;
   cursor: move;
   height: 100%;
-  background-color: inherit;
   opacity: ${props => (props.isDragging ? 0.5 : 1)};
   img {
     height: 85%;

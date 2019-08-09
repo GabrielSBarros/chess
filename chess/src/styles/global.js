@@ -10,7 +10,7 @@ export default createGlobalStyle`
 
   html, body, #root{
     height: 100%;
-    background-color: aliceblue;/*#fffafa;*/
+    background: linear-gradient(0deg, #402845, #22202C);
   }
 
   #root{

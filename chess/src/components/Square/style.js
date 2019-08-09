@@ -5,7 +5,7 @@ export const Container = styled.div`
     if (props.isOver && !props.canDrop) return "red";
     if (!props.isOver && props.canDrop) return "#FADA5E";
     if (props.isOver && props.canDrop) return "green";
-    return props.black ? "#666666" : "#9F9F9F";
+    return props.black ? "#666666" : "rgba(255, 255, 255, 0.5)";
   }};
   border: 1px solid lightgrey;
   height: 12.5%;

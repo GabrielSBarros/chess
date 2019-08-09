@@ -123,6 +123,10 @@ export function canMove(black) {
   return black === blackPlaying;
 }
 
+export function getBlackPlaying(){
+  return blackPlaying;
+}
+
 export function observe(o) {
   if (observer) {
     throw new Error("Multiple observers not implemented.");
