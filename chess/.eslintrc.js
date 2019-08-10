@@ -32,7 +32,7 @@ module.exports = {
     "no-console": ["error", { allow: ["tron", "log"] }],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    'no-plusplus': [2, { allowForLoopAfterthoughts: true }]
+    'no-plusplus': ["error", { allowForLoopAfterthoughts: true }]
   },
   settings: {
     "import/resolver": {

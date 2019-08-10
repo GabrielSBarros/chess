@@ -2,8 +2,9 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useDrag, DragPreviewImage } from "react-dnd";
 
-import { canMove } from "../../services/Game";
-import ChessPieces from "../../util/ChessPieces";
+import { canMove } from "~/services/Game";
+import ChessPieces from "~/util/ChessPieces";
+
 import { Container } from "./style";
 
 export default function Piece({ piece, black: blackSquare }) {

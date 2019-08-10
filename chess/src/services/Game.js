@@ -1,4 +1,4 @@
-import ChessMovements from "../util/ChessMovements";
+import ChessMovements from "~/util/ChessMovements";
 
 const genericMatriz = [[], [], [], [], [], [], [], []];
 

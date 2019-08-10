@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Square from "../Square";
-import { getBoard } from "../../services/Game";
+
+import Square from "~/components/Square";
+import { getBoard } from "~/services/Game";
 
 import { Container } from "./style";
 
