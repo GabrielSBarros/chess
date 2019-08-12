@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useDrop } from "react-dnd";
 
 import Piece from "../Piece";
-import { movePiece, canMovePieceTo } from "../../services/Game";
+import { movePiece, canMovePieceTo } from "~/services/Game";
 
 import { Container } from "./style";
 

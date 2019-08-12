@@ -1,6 +1,8 @@
 import React from "react";
+
+import { getBlackPlaying } from "~/services/Game";
+
 import { Container, Turn } from "./style";
-import { getBlackPlaying } from "../../services/Game";
 
 export default function GameStatus() {
   return (
