@@ -2,24 +2,44 @@ function underLimitis(x, y) {
   return x < 8 && x > -1 && y < 8 && y > -1;
 }
 
+/* 
+  Each function returns the number of squares a piece can move until reach other piece
+  with a specific path direction
+
+  Straight Movements:
+    Top: x = 0
+    Bottom: x = 7
+    Left: y = 0
+    Right: y = 7
+
+  Diagonal Movements:
+    TopLeft: x = 0 and y = 0
+    TopRight: x = 0 and y = 7
+    BottomLeft: x = 7 and y = 0
+    BottomRight: x = 7 and y = 7
+*/
+
 function getTopLim(x, y, board) {
   let topLim;
   for (topLim = x - 1; topLim >= 0; topLim--)
     if (board[topLim][y] !== "") break;
   return topLim;
 }
+
 function getBottomLim(x, y, board) {
   let bottomLim;
   for (bottomLim = x + 1; bottomLim < 8; bottomLim++)
     if (board[bottomLim][y] !== "") break;
   return bottomLim;
 }
+
 function getLeftLim(x, y, board) {
   let leftLim;
   for (leftLim = y - 1; leftLim >= 0; leftLim--)
     if (board[x][leftLim] !== "") break;
   return leftLim;
 }
+
 function getRightLim(x, y, board) {
   let rightLim;
   for (rightLim = y + 1; rightLim < 8; rightLim++)
@@ -48,6 +68,7 @@ function getTopRightLim(x, y, board) {
       break;
   return topRightLim;
 }
+
 function getBottomLeftLim(x, y, board) {
   let bottomLeftLim;
   for (bottomLeftLim = 1; bottomLeftLim <= 7; bottomLeftLim++)

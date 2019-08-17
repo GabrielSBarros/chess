@@ -21,7 +21,7 @@ export default function Board({ pieces, piecesPosition }) {
       piece = pieces[isTherePiece];
     }
 
-    return <Square x={x} y={y} black={black} piece={piece} />;
+    return <Square key={x * 8 + y} x={x} y={y} black={black} piece={piece} />;
   }
 
   for (let i = 0; i < 8; i++) {

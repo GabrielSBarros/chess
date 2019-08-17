@@ -10,5 +10,6 @@ export const Container = styled.div`
   img {
     height: 85%;
     align-self: center;
+    pointer-events: none;
   }
 `;

@@ -1,11 +1,17 @@
 import ChessMovements from "~/util/ChessMovements";
 
 const genericMatriz = [[], [], [], [], [], [], [], []];
+const players = {
+  NONE: 0,
+  WHITE: 1,
+  BLACK: 2,
+};
 
 let observer = null;
 let blackPlaying = false;
+const check = players.NONE;
 
-const board = genericMatriz.map(() => genericMatriz.map(() => ""));
+let renderedBoard = genericMatriz.map(() => genericMatriz.map(() => ""));
 
 function Piece(x, y, type, black, id) {
   return {
@@ -58,65 +64,113 @@ const pieces = {
 
 function setBoard() {
   // white pieces
-  board[7][0] = "wRook1";
-  board[7][1] = "wKnight1";
-  board[7][2] = "wBishop1";
-  board[7][3] = "wQueen";
-  board[7][4] = "wKing";
-  board[7][5] = "wBishop2";
-  board[7][6] = "wKnight2";
-  board[7][7] = "wRook2";
+  renderedBoard[7][0] = "wRook1";
+  renderedBoard[7][1] = "wKnight1";
+  renderedBoard[7][2] = "wBishop1";
+  renderedBoard[7][3] = "wQueen";
+  renderedBoard[7][4] = "wKing";
+  renderedBoard[7][5] = "wBishop2";
+  renderedBoard[7][6] = "wKnight2";
+  renderedBoard[7][7] = "wRook2";
 
   for (let i = 0; i < 8; i++) {
-    board[6][i] = `wPawn${i + 1}`;
+    renderedBoard[6][i] = `wPawn${i + 1}`;
   }
 
   // black pieces
-  board[0][0] = "bRook1";
-  board[0][1] = "bKnight1";
-  board[0][2] = "bBishop1";
-  board[0][3] = "bQueen";
-  board[0][4] = "bKing";
-  board[0][5] = "bBishop2";
-  board[0][6] = "bKnight2";
-  board[0][7] = "bRook2";
+  renderedBoard[0][0] = "bRook1";
+  renderedBoard[0][1] = "bKnight1";
+  renderedBoard[0][2] = "bBishop1";
+  renderedBoard[0][3] = "bQueen";
+  renderedBoard[0][4] = "bKing";
+  renderedBoard[0][5] = "bBishop2";
+  renderedBoard[0][6] = "bKnight2";
+  renderedBoard[0][7] = "bRook2";
 
   for (let i = 0; i < 8; i++) {
-    board[1][i] = `bPawn${i + 1}`;
+    renderedBoard[1][i] = `bPawn${i + 1}`;
   }
 }
 
 setBoard();
 
 function emitChange() {
-  observer(board, pieces);
-}
-
-export function movePiece(pieceName, toX, toY) {
-  const piece = pieces[pieceName];
-  const { x, y } = piece;
-
-  if (x === toX && y === toY) return;
-
-  board[toX][toY] = pieceName;
-  board[x][y] = "";
-  piece.x = toX;
-  piece.y = toY;
-  blackPlaying = !blackPlaying;
-
-  emitChange();
+  observer(renderedBoard, pieces);
 }
 
 export function getBoard() {
-  return board;
+  return renderedBoard;
 }
 
-export function canMovePieceTo(draggedPieceName, toX, toY, pieceBlack) {
+export function canMovePieceTo(
+  draggedPieceName,
+  toX,
+  toY,
+  pieceBlack,
+  board = renderedBoard
+) {
   const { black, x, y, canMoveTo } = pieces[draggedPieceName];
 
   if (pieceBlack === black) return false;
 
   return canMoveTo(x, y, toX, toY, board);
+}
+
+function isThreatnedByBlack(x, y, board) {
+  const bKeys = Object.keys(pieces).slice(16, 32);
+  const threatning = [];
+  bKeys.forEach(element => {
+    if (canMovePieceTo(element, x, y, false, board)) threatning.push(element);
+  });
+  return threatning;
+}
+
+function isWKingThreatned(board) {
+  const { x, y } = pieces.wKing;
+  return isThreatnedByBlack(x, y, board);
+}
+
+function isBKingThreatned(board) {
+  const wKeys = Object.keys(pieces).slice(0, 16);
+  const { x, y } = pieces.bKing;
+  const threatning = [];
+
+  wKeys.forEach(element => {
+    if (canMovePieceTo(element, x, y, true, board)) threatning.push(element);
+  });
+  return threatning;
+}
+
+export function movePiece(pieceName, toX, toY) {
+  const pieceCopy = { ...pieces[pieceName] };
+  const piece = pieces[pieceName];
+
+  const { x, y } = piece;
+
+  if (x === toX && y === toY) return;
+
+  const boardCopy = renderedBoard.map(elem => elem.slice());
+  boardCopy[toX][toY] = pieceName;
+  boardCopy[x][y] = "";
+  piece.x = toX;
+  piece.y = toY;
+
+  const wKingThreatned = isWKingThreatned(boardCopy);
+  const bKingThreatned = isBKingThreatned(boardCopy);
+  let illegalMove;
+
+  if (blackPlaying) illegalMove = !!bKingThreatned.length;
+  else illegalMove = !!wKingThreatned.length;
+
+  if (!illegalMove) {
+    blackPlaying = !blackPlaying;
+    const target = renderedBoard[toX][toY];
+    if (target) pieces[target].canMoveTo = () => false;
+    renderedBoard = boardCopy;
+  } else pieces[pieceName] = pieceCopy;
+  console.log(isWKingThreatned(boardCopy));
+  console.log(isBKingThreatned(boardCopy).length);
+  emitChange();
 }
 
 export function canMove(black) {
