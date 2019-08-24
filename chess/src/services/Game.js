@@ -1,3 +1,4 @@
+import Reactotron from "reactotron-react-js";
 import ChessMovements from "~/util/ChessMovements";
 import Paths from "~/util/Paths";
 
@@ -168,7 +169,11 @@ function canBlockThreatner(pieceName, kingX, kingY) {
   const threatning = blackPlaying ? isThreatnedByWhite : isThreatnedByBlack;
   let canBlock = false;
   pathToKing.forEach(({ x: x1, y: y1 }) => {
-    if (threatning(x1, y1, renderedBoard)) canBlock = true;
+    Reactotron.log(`${x1} ${y1}`);
+    Reactotron.log(threatning(x1, y1, renderedBoard));
+    if (threatning(x1, y1, renderedBoard)) {
+      canBlock = true;
+    }
   });
   return canBlock;
 }
@@ -190,10 +195,13 @@ function checkMate(threatners) {
   }
   const canCaptureThreatner = threatnerInDanger(threatners[0], x, y);
 
+  Reactotron.log(`legalMovements ${legalMovements.length}`);
+  Reactotron.log(`canCapture ${canCaptureThreatner}`);
+  Reactotron.log(`canBlock ${canBlockThreatner(threatners[0], x, y)}`);
   return (
     !legalMovements.length &&
     !canCaptureThreatner &&
-    !canBlockThreatner(threatners[0])
+    !canBlockThreatner(threatners[0], x, y)
   );
 }
 
