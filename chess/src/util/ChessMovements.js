@@ -74,6 +74,28 @@ function canMoveKing(x, y, toX, toY) {
   // the sum of the deltas of the squares around the king are always or 2
 }
 
+function kingCanMoveTo(x, y, board, black) {
+  const allMovements = [
+    { x: x - 1, y: y - 1 },
+    { x: x - 1, y },
+    { x: x - 1, y: y + 1 },
+    { x, y: y - 1 },
+    { x, y: y + 1 },
+    { x: x + 1, y: y - 1 },
+    { x: x + 1, y },
+    { x: x + 1, y: y + 1 },
+  ];
+  // console.log(allMovements);
+  const enemy = black ? "w" : "b";
+  const freeSpaces = allMovements.filter(
+    ({ x: toX, y: toY }) =>
+      Limits.underLimits(toX, toY) &&
+      (!board[toX][toY] || board[toX][toY][0] === enemy)
+  );
+  console.log(freeSpaces);
+  return freeSpaces;
+}
+
 function canMoveRook(x, y, toX, toY, board) {
   return straightMovement(x, y, toX, toY, board);
 }
@@ -90,6 +112,7 @@ function canMoveQueen(x, y, toX, toY, board) {
 }
 
 export default {
+  kingCanMoveTo,
   rook: canMoveRook,
   knight: canMoveKnight,
   bishop: canMoveBishop,

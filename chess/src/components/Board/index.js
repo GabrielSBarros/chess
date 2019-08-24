@@ -2,13 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import Square from "~/components/Square";
-import { getBoard } from "~/services/Game";
+// import { getBoard } from "~/services/Game";
 
 import { Container } from "./style";
 
 export default function Board({ pieces, piecesPosition }) {
-  console.log(getBoard());
-  console.log(pieces);
+  // console.log(getBoard());
+  // console.log(pieces);
   const squares = [];
 
   function renderSquare(x, y) {

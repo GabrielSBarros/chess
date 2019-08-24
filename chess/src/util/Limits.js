@@ -1,8 +1,8 @@
-function underLimitis(x, y) {
+function underLimits(x, y) {
   return x < 8 && x > -1 && y < 8 && y > -1;
 }
 
-/* 
+/*
   Each function returns the number of squares a piece can move until reach other piece
   with a specific path direction
 
@@ -51,7 +51,7 @@ function getTopLeftLim(x, y, board) {
   let topLeftLim;
   for (topLeftLim = 1; topLeftLim <= 7; topLeftLim++)
     if (
-      !underLimitis(x - topLeftLim, y - topLeftLim) ||
+      !underLimits(x - topLeftLim, y - topLeftLim) ||
       board[x - topLeftLim][y - topLeftLim] !== ""
     )
       break;
@@ -62,7 +62,7 @@ function getTopRightLim(x, y, board) {
   let topRightLim;
   for (topRightLim = 1; topRightLim <= 7; topRightLim++)
     if (
-      !underLimitis(x - topRightLim, y + topRightLim) ||
+      !underLimits(x - topRightLim, y + topRightLim) ||
       board[x - topRightLim][y + topRightLim] !== ""
     )
       break;
@@ -73,7 +73,7 @@ function getBottomLeftLim(x, y, board) {
   let bottomLeftLim;
   for (bottomLeftLim = 1; bottomLeftLim <= 7; bottomLeftLim++)
     if (
-      !underLimitis(x + bottomLeftLim, y - bottomLeftLim) ||
+      !underLimits(x + bottomLeftLim, y - bottomLeftLim) ||
       board[x + bottomLeftLim][y - bottomLeftLim] !== ""
     )
       break;
@@ -84,7 +84,7 @@ function getBottomRightLim(x, y, board) {
   let bottomRightLim;
   for (bottomRightLim = 1; bottomRightLim <= 7; bottomRightLim++)
     if (
-      !underLimitis(x + bottomRightLim, y + bottomRightLim) ||
+      !underLimits(x + bottomRightLim, y + bottomRightLim) ||
       board[x + bottomRightLim][y + bottomRightLim] !== ""
     )
       break;
@@ -92,7 +92,7 @@ function getBottomRightLim(x, y, board) {
 }
 
 export default {
-  underLimitis,
+  underLimits,
   getTopLim,
   getBottomLim,
   getLeftLim,

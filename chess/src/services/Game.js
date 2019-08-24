@@ -1,21 +1,25 @@
 import ChessMovements from "~/util/ChessMovements";
+import Paths from "~/util/Paths";
 
 const genericMatriz = [[], [], [], [], [], [], [], []];
-const players = {
+const statusCode = {
   NONE: 0,
-  WHITE: 1,
-  BLACK: 2,
+  CHECK_WHITE: 1,
+  CHECK_BLACK: 2,
+  CHECKMATE_WHITE: 3,
+  CHECKMATE_BLACK: 4,
 };
 
 let observer = null;
 let blackPlaying = false;
-const check = players.NONE;
+export let gameStatus = statusCode.NONE;
 
 let renderedBoard = genericMatriz.map(() => genericMatriz.map(() => ""));
 
 function Piece(x, y, type, black, id) {
   return {
     canMoveTo: ChessMovements[type],
+    pathTo: Paths[type],
     black,
     type,
     id,
@@ -111,7 +115,7 @@ export function canMovePieceTo(
 ) {
   const { black, x, y, canMoveTo } = pieces[draggedPieceName];
 
-  if (pieceBlack === black) return false;
+  if (gameStatus > 2 || pieceBlack === black) return false;
 
   return canMoveTo(x, y, toX, toY, board);
 }
@@ -119,8 +123,19 @@ export function canMovePieceTo(
 function isThreatnedByBlack(x, y, board) {
   const bKeys = Object.keys(pieces).slice(16, 32);
   const threatning = [];
+
   bKeys.forEach(element => {
     if (canMovePieceTo(element, x, y, false, board)) threatning.push(element);
+  });
+  return threatning;
+}
+
+function isThreatnedByWhite(x, y, board) {
+  const wKeys = Object.keys(pieces).slice(0, 16);
+  const threatning = [];
+
+  wKeys.forEach(element => {
+    if (canMovePieceTo(element, x, y, true, board)) threatning.push(element);
   });
   return threatning;
 }
@@ -131,14 +146,73 @@ function isWKingThreatned(board) {
 }
 
 function isBKingThreatned(board) {
-  const wKeys = Object.keys(pieces).slice(0, 16);
   const { x, y } = pieces.bKing;
-  const threatning = [];
+  return isThreatnedByWhite(x, y, board);
+}
 
-  wKeys.forEach(element => {
-    if (canMovePieceTo(element, x, y, true, board)) threatning.push(element);
+function threatnerInDanger(piece) {
+  const { x, y } = pieces[piece];
+  const threatning = blackPlaying ? isThreatnedByWhite : isThreatnedByBlack;
+  const threatners = threatning(x, y, renderedBoard);
+  if (
+    threatners.length === 1 &&
+    (threatners[0] === "bKing" || threatners[0] === "wKing")
+  )
+    return false;
+  return !!threatning(x, y, renderedBoard).length;
+}
+
+function canBlockThreatner(pieceName, kingX, kingY) {
+  const { x, y, pathTo } = pieces[pieceName];
+  const pathToKing = pathTo(x, y, kingX, kingY, renderedBoard);
+  const threatning = blackPlaying ? isThreatnedByWhite : isThreatnedByBlack;
+  let canBlock = false;
+  pathToKing.forEach(({ x: x1, y: y1 }) => {
+    if (threatning(x1, y1, renderedBoard)) canBlock = true;
   });
-  return threatning;
+  return canBlock;
+}
+
+function checkMate(threatners) {
+  const { wKing, bKing } = pieces;
+  const { x, y, black } = blackPlaying ? wKing : bKing;
+  const threatning = blackPlaying ? isThreatnedByBlack : isThreatnedByWhite;
+  const canMoveTo = ChessMovements.kingCanMoveTo(x, y, renderedBoard, black);
+
+  const legalMovements = canMoveTo.filter(
+    ({ x: toX, y: toY }) => !threatning(toX, toY, renderedBoard).length
+  );
+  console.log("legalMovements ");
+  console.log(!legalMovements);
+  if (threatners.length > 1) {
+    console.log("double check");
+    return !legalMovements.length;
+  }
+  const canCaptureThreatner = threatnerInDanger(threatners[0], x, y);
+
+  return (
+    !legalMovements.length &&
+    !canCaptureThreatner &&
+    !canBlockThreatner(threatners[0])
+  );
+}
+
+function check() {
+  const threatning = blackPlaying ? isWKingThreatned : isBKingThreatned;
+  const threatners = threatning(renderedBoard);
+  const isInCheck = !!threatners.length;
+  console.log("threatning");
+  console.log(threatners);
+  console.log(isInCheck);
+  let status = statusCode.NONE;
+  if (isInCheck) {
+    status = blackPlaying ? statusCode.CHECK_WHITE : statusCode.CHECK_BLACK;
+    if (checkMate(threatners)) {
+      status += 2;
+    }
+  }
+
+  return status;
 }
 
 export function movePiece(pieceName, toX, toY) {
@@ -163,13 +237,14 @@ export function movePiece(pieceName, toX, toY) {
   else illegalMove = !!wKingThreatned.length;
 
   if (!illegalMove) {
-    blackPlaying = !blackPlaying;
     const target = renderedBoard[toX][toY];
     if (target) pieces[target].canMoveTo = () => false;
     renderedBoard = boardCopy;
+    gameStatus = check();
+    console.log(`gameStatus: ${gameStatus}`);
+    blackPlaying = !blackPlaying;
   } else pieces[pieceName] = pieceCopy;
-  console.log(isWKingThreatned(boardCopy));
-  console.log(isBKingThreatned(boardCopy).length);
+
   emitChange();
 }
 
