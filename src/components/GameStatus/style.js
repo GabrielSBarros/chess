@@ -32,6 +32,10 @@ export const Turn = styled.div`
 
   div:first-child {
     transition: margin-top 1.15s;
-    margin-top: ${props => (props.black ? "-60px" : "0px")};
+    margin-top: ${props => {
+      if (props.status > 0 && props.status < 3) return "-120px";
+      if (props.status > 2) return "-180px";
+      return props.black ? "-60px" : "0px";
+    }};
   }
 `;
