@@ -13,9 +13,21 @@ const statusCode = {
 
 let observer = null;
 let blackPlaying = false;
+const movements = [];
+// eslint-disable-next-line import/no-mutable-exports
 export let gameStatus = statusCode.NONE;
 
 let renderedBoard = genericMatriz.map(() => genericMatriz.map(() => ""));
+
+function printMovements() {
+  return movements
+    .map(movement => {
+      const { x, y } = movement.from;
+      const { x: toX, y: toY } = movement.to;
+      return `${movement.piece} from: ${x} ${y} to: ${toX} ${toY}`;
+    })
+    .reverse();
+}
 
 function Piece(x, y, type, black, id) {
   return {
@@ -223,11 +235,18 @@ function check() {
   return status;
 }
 
+function promotion(pieceName) {
+  const piece = pieces[pieceName];
+  piece.type = "queen";
+  piece.canMoveTo = ChessMovements.queen;
+  Reactotron.log(`promotion${pieceName}`);
+}
+
 export function movePiece(pieceName, toX, toY) {
   const pieceCopy = { ...pieces[pieceName] };
   const piece = pieces[pieceName];
 
-  const { x, y } = piece;
+  const { x, y, type } = piece;
 
   if (x === toX && y === toY) return;
 
@@ -251,6 +270,15 @@ export function movePiece(pieceName, toX, toY) {
     gameStatus = check();
     console.log(`gameStatus: ${gameStatus}`);
     blackPlaying = !blackPlaying;
+    movements.push({
+      piece: pieceName,
+      from: { x, y },
+      to: { x: toX, y: toY },
+    });
+    if ((type === "wpawn" && toX === 0) || (type === "bpawn" && toX === 7)) {
+      promotion(pieceName);
+    }
+    Reactotron.log(printMovements());
   } else pieces[pieceName] = pieceCopy;
 
   emitChange();
