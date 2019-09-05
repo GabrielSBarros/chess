@@ -22,6 +22,7 @@ export const Turn = styled.div`
   transform: translate(-50%, -50%);*/
   border-radius: 2.5px;
   transition: color 0.9, background-color 0.9;
+  user-select: none;
 
   div {
     line-height: 60px;

@@ -202,6 +202,9 @@ export function movePiece(pieceName, toX, toY) {
   if (x === toX && y === toY) return;
 
   const boardCopy = renderedBoard.map(elem => elem.slice());
+
+  const target = renderedBoard[toX][toY];
+  if (target) pieces[target].canMoveTo = () => false;
   boardCopy[toX][toY] = pieceName;
   boardCopy[x][y] = "";
   piece.x = toX;
@@ -215,8 +218,6 @@ export function movePiece(pieceName, toX, toY) {
   else illegalMove = !!wKingThreatned.length;
 
   if (!illegalMove) {
-    const target = renderedBoard[toX][toY];
-    if (target) pieces[target].canMoveTo = () => false;
     renderedBoard = boardCopy;
     gameStatus = check();
     console.log(`gameStatus: ${gameStatus}`);
@@ -230,7 +231,10 @@ export function movePiece(pieceName, toX, toY) {
       promotion(pieceName);
     }
     Reactotron.log(printMovements());
-  } else pieces[pieceName] = pieceCopy;
+  } else {
+    pieces[pieceName] = pieceCopy;
+    if (target) pieces[target].canMoveTo = ChessMovements[pieces[target].type];
+  }
 
   emitChange();
 }
