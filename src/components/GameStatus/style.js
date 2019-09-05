@@ -5,6 +5,7 @@ export const Container = styled.section`
   flex-direction: column;
   height: 100%;
   width: calc((100vw - 85vh) / 2);
+  justify-content: space-around;
 `;
 
 export const Turn = styled.div`
@@ -13,10 +14,12 @@ export const Turn = styled.div`
   height: 60px;
   text-align: center;
   overflow: hidden;
-  position: absolute;
+  width: 70%;
+  align-self: center;
+  /*position: absolute;
   top: 50%;
   left: calc(((100vw - 85vh) / 2) / 2);
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);*/
   border-radius: 2.5px;
   transition: color 0.9, background-color 0.9;
 
@@ -38,4 +41,25 @@ export const Turn = styled.div`
       return props.black ? "-60px" : "0px";
     }};
   }
+`;
+
+export const Button = styled.div`
+  margin-top: 10px;
+  background-color: lightgrey;
+  width: 25%;
+  align-self: center;
+  text-align: center;
+  border-radius: 2.5px;
+  font-size: 25px;
+  cursor: pointer;
+  user-select: none;
+  &:active {
+    transform: scale(1.03);
+  }
+`;
+
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
