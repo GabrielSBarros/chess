@@ -1,6 +1,6 @@
 import Reactotron from "reactotron-react-js";
 import ChessMovements from "~/util/ChessMovements";
-import { startBoard, startPieces } from "~/util/constants";
+import { startBoard, startPieces, Piece } from "~/util/constants";
 
 const statusCode = {
   NONE: 0,
@@ -187,9 +187,8 @@ function check() {
 }
 
 function promotion(pieceName) {
-  const piece = pieces[pieceName];
-  piece.type = "queen";
-  piece.canMoveTo = ChessMovements.queen;
+  const {x, y, black, id} = pieces[pieceName];
+  pieces[pieceName] = Piece(x, y, "queen", black, id); 
   Reactotron.log(`promotion${pieceName}`);
 }
 

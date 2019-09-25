@@ -6,7 +6,7 @@ export function startBoard() {
   return genericMatriz.map(() => genericMatriz.map(() => ""));
 }
 
-function Piece(x, y, type, black, id) {
+export function Piece(x, y, type, black, id) {
   return {
     canMoveTo: ChessMovements[type],
     pathTo: Paths[type],
