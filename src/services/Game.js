@@ -187,8 +187,8 @@ function check() {
 }
 
 function promotion(pieceName) {
-  const {x, y, black, id} = pieces[pieceName];
-  pieces[pieceName] = Piece(x, y, "queen", black, id); 
+  const { x, y, black, id } = pieces[pieceName];
+  pieces[pieceName] = Piece(x, y, "queen", black, id);
   Reactotron.log(`promotion${pieceName}`);
 }
 

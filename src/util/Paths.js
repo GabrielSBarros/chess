@@ -129,6 +129,8 @@ export default {
   rook: straightPathTo,
   queen: queenPathTo,
   pawn: () => [],
+  wpawn: () => [],
+  bpawn: () => [],
   king: () => [],
   knight: () => [],
 };
