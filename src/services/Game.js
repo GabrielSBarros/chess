@@ -84,83 +84,86 @@ export function canMovePieceTo(
   return canMoveTo(x, y, toX, toY, board);
 }
 
-function isThreatnedByBlack(x, y, board) {
-  const bKeys = Object.keys(pieces).slice(16, 32);
+/**
+ * @param {*} color true = white, false = black
+ */
+function isThreatned(x, y, board, color = true) {
+  const slide = color ? [0, 16] : [16, 32];
+  const Keys = Object.keys(pieces).slice(slide[0], slide[1]);
+
   const threatning = [];
 
-  bKeys.forEach(element => {
-    if (canMovePieceTo(element, x, y, false, board)) threatning.push(element);
+  Keys.forEach(element => {
+    if (canMovePieceTo(element, x, y, color, board)) threatning.push(element);
   });
-  return threatning;
-}
 
-function isThreatnedByWhite(x, y, board) {
-  const wKeys = Object.keys(pieces).slice(0, 16);
-  const threatning = [];
-
-  wKeys.forEach(element => {
-    if (canMovePieceTo(element, x, y, true, board)) threatning.push(element);
-  });
   return threatning;
 }
 
 function isWKingThreatned(board) {
   const { x, y } = pieces.wKing;
-  return isThreatnedByBlack(x, y, board);
+  return isThreatned(x, y, board, false);
 }
 
 function isBKingThreatned(board) {
   const { x, y } = pieces.bKing;
-  return isThreatnedByWhite(x, y, board);
+  return isThreatned(x, y, board);
 }
 
 function threatnerInDanger(piece) {
   const { x, y } = pieces[piece];
-  const threatning = blackPlaying ? isThreatnedByWhite : isThreatnedByBlack;
-  const threatners = threatning(x, y, renderedBoard);
+  const threatners = isThreatned(x, y, renderedBoard, !!blackPlaying);
+
   if (
     threatners.length === 1 &&
     (threatners[0] === "bKing" || threatners[0] === "wKing")
-  )
+  ) {
     return false;
-  return !!threatning(x, y, renderedBoard).length;
+  }
+
+  return !!isThreatned(x, y, renderedBoard, !!blackPlaying).length;
 }
 
 function canBlockThreatner(pieceName, kingX, kingY) {
   const { x, y, pathTo } = pieces[pieceName];
   const pathToKing = pathTo(x, y, kingX, kingY, renderedBoard);
-  const threatning = blackPlaying ? isThreatnedByWhite : isThreatnedByBlack;
+
   let canBlock = false;
   pathToKing.forEach(({ x: x1, y: y1 }) => {
     Reactotron.log(`${x1} ${y1}`);
-    Reactotron.log(threatning(x1, y1, renderedBoard));
-    if (threatning(x1, y1, renderedBoard)) {
+    Reactotron.log(isThreatned(x1, y1, renderedBoard, !!blackPlaying));
+    if (isThreatned(x1, y1, renderedBoard, !!blackPlaying)) {
       canBlock = true;
     }
   });
+
   return canBlock;
 }
 
 function checkMate(threatners) {
   const { wKing, bKing } = pieces;
   const { x, y, black } = blackPlaying ? wKing : bKing;
-  const threatning = blackPlaying ? isThreatnedByBlack : isThreatnedByWhite;
   const canMoveTo = ChessMovements.kingCanMoveTo(x, y, renderedBoard, black);
 
   const legalMovements = canMoveTo.filter(
-    ({ x: toX, y: toY }) => !threatning(toX, toY, renderedBoard).length
+    ({ x: toX, y: toY }) =>
+      !isThreatned(toX, toY, renderedBoard, !!blackPlaying).length
   );
+
   console.log("legalMovements ");
   console.log(!legalMovements);
+
   if (threatners.length > 1) {
     console.log("double check");
     return !legalMovements.length;
   }
+
   const canCaptureThreatner = threatnerInDanger(threatners[0], x, y);
 
   Reactotron.log(`legalMovements ${legalMovements.length}`);
   Reactotron.log(`canCapture ${canCaptureThreatner}`);
   Reactotron.log(`canBlock ${canBlockThreatner(threatners[0], x, y)}`);
+
   return (
     !legalMovements.length &&
     !canCaptureThreatner &&
@@ -172,15 +175,15 @@ function check() {
   const threatning = blackPlaying ? isWKingThreatned : isBKingThreatned;
   const threatners = threatning(renderedBoard);
   const isInCheck = !!threatners.length;
+
   console.log("threatning");
   console.log(threatners);
   console.log(isInCheck);
+
   let status = statusCode.NONE;
   if (isInCheck) {
     status = blackPlaying ? statusCode.CHECK_WHITE : statusCode.CHECK_BLACK;
-    if (checkMate(threatners)) {
-      status += 2;
-    }
+    if (checkMate(threatners)) status += 2;
   }
 
   return status;
@@ -204,31 +207,36 @@ export function movePiece(pieceName, toX, toY) {
 
   const target = renderedBoard[toX][toY];
   if (target) pieces[target].canMoveTo = () => false;
+
   boardCopy[toX][toY] = pieceName;
   boardCopy[x][y] = "";
+
   piece.x = toX;
   piece.y = toY;
 
   const wKingThreatned = isWKingThreatned(boardCopy);
   const bKingThreatned = isBKingThreatned(boardCopy);
-  let illegalMove;
 
-  if (blackPlaying) illegalMove = !!bKingThreatned.length;
-  else illegalMove = !!wKingThreatned.length;
+  const illegalMove = blackPlaying
+    ? !!bKingThreatned.length
+    : !!wKingThreatned.length;
 
   if (!illegalMove) {
     renderedBoard = boardCopy;
     gameStatus = check();
     console.log(`gameStatus: ${gameStatus}`);
     blackPlaying = !blackPlaying;
+
     movements.push({
       piece: pieceName,
       from: { x, y },
       to: { x: toX, y: toY },
     });
+
     if ((type === "wpawn" && toX === 0) || (type === "bpawn" && toX === 7)) {
       promotion(pieceName);
     }
+
     Reactotron.log(printMovements());
   } else {
     pieces[pieceName] = pieceCopy;
@@ -253,6 +261,7 @@ export function reset() {
   setBoard();
   blackPlaying = false;
   gameStatus = statusCode.NONE;
+
   emitChange();
 }
 
